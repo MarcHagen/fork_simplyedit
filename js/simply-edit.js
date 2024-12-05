@@ -262,7 +262,10 @@
 					}
 
 					editor.data.apply(editor.currentData, document);
-					editor.fireEvent("simply-content-loaded", document);
+					editor.contentLoaded = true;
+					if (editor.domLoaded) {
+						editor.fireEvent("simply-content-loaded", document);
+					}
 
 					var checkEdit = function(evt) {
 						if ((evt && evt.newURL && evt.newURL.match(/#simply-edit$/) || document.location.hash == "#simply-edit" || document.location.search == "?simply-edit") && !document.body.getAttribute("data-simply-edit")) {
@@ -3662,18 +3665,16 @@
 
 	var preventDOMContentLoaded = function(event) {
 		event.preventDefault();
+		editor.domLoaded = true;
+		if (editor.contentLoaded) {
+			editor.fireEvent("simply-content-loaded", document);
+		}
 		return false;
 	};
 
 	if ("addEventListener" in document) {
 		document.addEventListener("DOMContentLoaded", preventDOMContentLoaded, true);
 		window.addEventListener("load", preventDOMContentLoaded, true);
-	}
-
-	if (typeof jQuery !== "undefined") {
-		if (typeof jQuery.holdReady === "function") {
-			jQuery.holdReady(true);
-		}
 	}
 
 	document.addEventListener("simply-content-loaded", function(evt) {
@@ -3688,9 +3689,8 @@
 		}, 100);
 
 		if (typeof jQuery !== "undefined") {
-			if (typeof jQuery.holdReady === "function") {
-				jQuery.holdReady(false);
-			}
+			console.log("calling jQuery.ready");
+			jQuery.ready();
 		}
 	});
 
