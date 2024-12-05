@@ -3683,7 +3683,6 @@
 			window.removeEventListener("load", preventDOMContentLoaded, true);
 		}
 			
-		editor.fireEvent("DOMContentLoaded", document);
 		window.setTimeout(function() {
 			editor.fireEvent("load", window);
 		}, 100);
@@ -3692,6 +3691,7 @@
 			console.log("calling jQuery.ready");
 			jQuery.ready();
 		}
+		editor.fireEvent("DOMContentLoaded", document);
 	});
 
 	// Add fake window.console for IE8/9
